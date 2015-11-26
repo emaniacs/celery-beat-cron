@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+export DEBIAN_FRONTEND=noninteractive
+export HHOME=/home/vagrant
+export CODE_DIR=$HHOME/jobs
+
+installpkg(){
+    dpkg-query --status $1 >/dev/null || apt-get install -y $1
+}
+
+apt-get update
+
+installpkg build-essential python-dev
+installpkg python-pip
+installpkg redis-server
+installpkg supervisor
+
+pip install celery
+pip install redis
+pip install flower
+pip install request
+
+echo 'Supervisord'
+cp -fv /tmp/celery.conf /etc/supervisor/conf.d/
+cp -fv /tmp/flower.conf /etc/supervisor/conf.d/
+supervisorctl update
+supervisorctl restart celery
+supervisorctl restart flower
