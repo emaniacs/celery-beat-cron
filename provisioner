@@ -7,7 +7,7 @@ installpkg(){
     dpkg-query --status $1 >/dev/null || apt-get install -y $1
 }
 
-apt-get update
+# apt-get update
 
 installpkg build-essential python-dev
 installpkg python-pip
@@ -18,6 +18,7 @@ pip install celery
 pip install redis
 pip install flower
 pip install request
+pip install stopit
 
 echo 'Supervisord'
 cp -fv /tmp/celery.conf /etc/supervisor/conf.d/
