@@ -25,27 +25,37 @@ def run_crontab(jobname):
     filename = '{}/jobs/{}.py'.format(THIS_DIR, name)
     log_it(":LOAD {}".format(jobname))
 
+    # load module
+    job = None
     try:
         # pdb.set_trace()
         job = imp.load_source(name, filename)
+    except Exception as e:
+        log_it(':FAIL {}'.format(jobname))
+        raise e
 
+    # run module
+    status = 'success'
+    try:
         # get timeout
         timeout = DEFAULT_TIMEOUT
         if 'TIMEOUT' in dir(job):
             timeout = job.TIMEOUT
 
-        try:
-            log_it(":RUN {}; TIMEOUT {}".format(jobname, timeout))
-            with stopit.ThreadingTimeout(timeout) as tmt:
-                result = job.run()
-        except Exception as e:
-            log_it(":END {}; TIMEOUT {}; STATE timeout; MSG {}".format(jobname, timeout, str(e)))
-            result = 'TIMEOUT'
+        log_it(":RUN {}; TIMEOUT {}".format(jobname, timeout))
+        with stopit.ThreadingTimeout(timeout) as tmt:
+            result = job.run()
+
+    except stopit.TimeoutException as e:
+        status = 'timeout'
+        result = 'TIMEOUT'
+        pass
+
     except Exception as e:
         log_it(":END {}; TIMEOUT {}; STATE error".format(jobname, timeout))
         raise e
 
-    log_it(":END {}; TIMEOUT {}; STATE success".format(jobname, timeout))
+    log_it(":END {}; TIMEOUT {}; STATE {}".format(jobname, timeout, status))
     return result
 
 
