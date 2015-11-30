@@ -38,7 +38,7 @@ def run_crontab(jobname):
             with stopit.ThreadingTimeout(timeout) as tmt:
                 result = job.run()
         except Exception as e:
-            log_it(":END {}; TIMEOUT {}; STATE timeout".format(jobname, timeout))
+            log_it(":END {}; TIMEOUT {}; STATE timeout; MSG {}".format(jobname, timeout, str(e)))
             result = 'TIMEOUT'
     except Exception as e:
         log_it(":END {}; TIMEOUT {}; STATE error".format(jobname, timeout))
