@@ -3,6 +3,7 @@ from celery import Celery
 import os
 import sys
 import imp
+import stopit
 # import pdb
 
 app = Celery('cron')
