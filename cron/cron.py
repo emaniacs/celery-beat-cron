@@ -36,12 +36,13 @@ def run_crontab(jobname):
 
     # run module
     status = 'success'
-    try:
-        # get timeout
-        timeout = DEFAULT_TIMEOUT
-        if 'TIMEOUT' in dir(job):
-            timeout = job.TIMEOUT
 
+    # get timeout
+    timeout = DEFAULT_TIMEOUT
+    if 'TIMEOUT' in dir(job):
+        timeout = job.TIMEOUT
+
+    try:
         log_it(":RUN {}; TIMEOUT {}".format(jobname, timeout))
         with stopit.ThreadingTimeout(timeout) as tmt:
             result = job.run()
@@ -49,7 +50,6 @@ def run_crontab(jobname):
     except stopit.TimeoutException:
         status = 'timeout'
         result = 'TIMEOUT'
-        pass
 
     except Exception as e:
         log_it(":END {}; TIMEOUT {}; STATE error".format(jobname, timeout))
