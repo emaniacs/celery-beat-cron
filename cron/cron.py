@@ -46,7 +46,7 @@ def run_crontab(jobname):
         with stopit.ThreadingTimeout(timeout) as tmt:
             result = job.run()
 
-    except stopit.TimeoutException as e:
+    except stopit.TimeoutException:
         status = 'timeout'
         result = 'TIMEOUT'
         pass
