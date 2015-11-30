@@ -43,4 +43,10 @@ CELERYBEAT_SCHEDULE = {
             'schedule': crontab(minute='*/1'),
             'args': ('job_must_timeout',),
         },
+
+        'not-found-job': {
+            'task': 'cron.run_crontab',
+            'schedule': crontab(minute='*/2'),
+            'args': ('not-found-job',),
+        },
     }
