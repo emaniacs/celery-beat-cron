@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
   config.ssh.forward_agent = true
-  config.vm.synced_folder "./cron", "/home/vagrant/cron"
+  config.vm.synced_folder "./", "/home/vagrant/"
 
   # config.vm.provider "virtualbox" do |vb|
   #   # Don't boot with headless mode
